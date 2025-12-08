@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import JobCard from '../components/JobCard';
 import InputField from '../components/InputField';
 import Button from '../components/Button';
@@ -8,27 +9,42 @@ const JobListings = () => {
     const [jobs, setJobs] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showFilters, setShowFilters] = useState(false);
+    const [searchParams] = useSearchParams();
+
     const [filters, setFilters] = useState({
-        keyword: '',
-        location: '',
-        salaryRange: '',
-        category: 'All Categories',
+        keyword: searchParams.get('keyword') || '',
+        location: searchParams.get('location') || '',
+        salaryRange: searchParams.get('salaryRange') || '',
+        category: searchParams.get('category') || 'All Categories',
         jobType: [],
         experience: []
     });
+    const [sortBy, setSortBy] = useState('newest');
 
     useEffect(() => {
-        fetchJobs();
-    }, []);
+        const urlFilters = {
+            keyword: searchParams.get('keyword') || '',
+            location: searchParams.get('location') || '',
+            salaryRange: searchParams.get('salaryRange') || '',
+            category: searchParams.get('category') || 'All Categories',
+        };
 
-    const fetchJobs = async () => {
+        setFilters(prev => ({ ...prev, ...urlFilters }));
+        // Reset sort when fresh params come or keep default? Let's keep default 'newest'
+        fetchJobs(urlFilters, 'newest');
+    }, [searchParams]);
+
+    const fetchJobs = async (activeFilters = filters, activeSort = sortBy) => {
         setLoading(true);
         try {
             const query = new URLSearchParams();
-            if (filters.keyword) query.append('keyword', filters.keyword);
-            if (filters.location) query.append('location', filters.location);
-            if (filters.salaryRange) query.append('salaryRange', filters.salaryRange);
-            if (filters.category !== 'All Categories') query.append('category', filters.category);
+            if (activeFilters.keyword) query.append('keyword', activeFilters.keyword);
+            if (activeFilters.location) query.append('location', activeFilters.location);
+            if (activeFilters.salaryRange) query.append('salaryRange', activeFilters.salaryRange);
+            if (activeFilters.category !== 'All Categories') query.append('category', activeFilters.category);
+
+            // Add sorting
+            query.append('sort', activeSort);
 
             // Note: Multiple checkboxes for type/experience would need more complex query handling in backend
             // For now, let's just take the first selected or handle simple single-selection for simplicity in MVP
@@ -52,8 +68,14 @@ const JobListings = () => {
         setFilters({ ...filters, [e.target.name]: e.target.value });
     };
 
+    const handleSortChange = (e) => {
+        const newSort = e.target.value;
+        setSortBy(newSort);
+        fetchJobs(filters, newSort);
+    };
+
     const applyFilters = () => {
-        fetchJobs();
+        fetchJobs(filters);
     };
 
     return (
@@ -89,13 +111,7 @@ const JobListings = () => {
                                 value={filters.location}
                                 onChange={handleFilterChange}
                             />
-                            <InputField
-                                label="Salary Range"
-                                name="salaryRange"
-                                placeholder="e.g. 100k or 100000"
-                                value={filters.salaryRange}
-                                onChange={handleFilterChange}
-                            />
+                            
 
                             <div>
                                 <label className="text-sm font-bold text-gray-900 mb-3 block">Category</label>
@@ -124,10 +140,13 @@ const JobListings = () => {
                         <h1 className="text-3xl font-bold text-gray-900">All Jobs <span className="text-gray-400 text-xl font-normal ml-2">({jobs.length})</span></h1>
                         <div className="flex items-center gap-3 bg-white px-4 py-2 rounded-lg border border-gray-100 shadow-sm w-full md:w-auto justify-between md:justify-start">
                             <span className="text-sm text-gray-500 font-medium">Sort by:</span>
-                            <select className="text-sm border-none bg-transparent font-bold text-gray-900 outline-none cursor-pointer">
-                                <option>Newest</option>
-                                <option>Relevant</option>
-                                <option>Salary</option>
+                            <select
+                                className="text-sm border-none bg-transparent font-bold text-gray-900 outline-none cursor-pointer"
+                                value={sortBy}
+                                onChange={handleSortChange}
+                            >
+                                <option value="newest">Newest</option>
+                                <option value="oldest">Oldest</option>
                             </select>
                         </div>
                     </div>

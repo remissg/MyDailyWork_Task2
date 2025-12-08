@@ -43,6 +43,12 @@ const jobSchema = mongoose.Schema(
             type: String,
             required: [true, 'Please add a category'],
         },
+        minSalary: {
+            type: Number,
+        },
+        maxSalary: {
+            type: Number,
+        },
         isActive: {
             type: Boolean,
             default: true,
@@ -52,5 +58,32 @@ const jobSchema = mongoose.Schema(
         timestamps: true,
     }
 );
+
+// Pre-save hook to parse salaryRange into minSalary and maxSalary
+jobSchema.pre('save', function (next) {
+    if (this.salaryRange) {
+        // Example: "$100k - $140k" or "$80,000 - $110,000"
+        const numbers = this.salaryRange.match(/(\d+)[kK]?/g);
+
+        if (numbers && numbers.length > 0) {
+            const parseSalary = (str) => {
+                let num = parseInt(str.replace(/\D/g, ''));
+                if (str.toLowerCase().includes('k')) {
+                    num *= 1000;
+                }
+                return num;
+            };
+
+            this.minSalary = parseSalary(numbers[0]);
+
+            if (numbers.length > 1) {
+                this.maxSalary = parseSalary(numbers[1]);
+            } else {
+                this.maxSalary = this.minSalary;
+            }
+        }
+    }
+    next();
+});
 
 module.exports = mongoose.model('Job', jobSchema);

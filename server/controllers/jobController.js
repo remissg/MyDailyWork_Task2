@@ -9,7 +9,7 @@ const User = require('../models/User');
 // @access  Public
 const getJobs = async (req, res) => {
     try {
-        const { keyword, category, location, jobType, salaryRange, limit } = req.query;
+        const { keyword, category, location, jobType, salaryRange, limit, sort } = req.query;
         let query = { isActive: true };
 
         if (keyword) {
@@ -29,7 +29,29 @@ const getJobs = async (req, res) => {
             query.salaryRange = { $regex: salaryRange, $options: 'i' };
         }
 
-        let jobQuery = Job.find(query).sort({ createdAt: -1 });
+        // Sorting Logic
+        let sortOption = { createdAt: -1 }; // Default new to old
+
+        if (sort) {
+            switch (sort) {
+                case 'newest':
+                    sortOption = { createdAt: -1 };
+                    break;
+                case 'oldest':
+                    sortOption = { createdAt: 1 };
+                    break;
+                case 'salaryHigh':
+                    sortOption = { maxSalary: -1 };
+                    break;
+                case 'salaryLow':
+                    sortOption = { minSalary: 1 };
+                    break;
+                default:
+                    sortOption = { createdAt: -1 };
+            }
+        }
+
+        let jobQuery = Job.find(query).sort(sortOption);
 
         if (limit) {
             jobQuery = jobQuery.limit(parseInt(limit));
