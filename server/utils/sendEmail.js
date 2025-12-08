@@ -7,11 +7,11 @@ const sendEmail = async (options) => {
         const isDevelopment = process.env.NODE_ENV === 'development';
 
         const emailConfig = {
-            host: isDevelopment ? process.env.EMAIL_HOST_DEV : process.env.EMAIL_HOST_PROD,
-            port: parseInt(isDevelopment ? process.env.EMAIL_PORT_DEV : process.env.EMAIL_PORT_PROD),
+            host: process.env.EMAIL_HOST_PROD || process.env.EMAIL_HOST_DEV,
+            port: parseInt(process.env.EMAIL_PORT_PROD || process.env.EMAIL_PORT_DEV || '2525'),
             auth: {
-                user: isDevelopment ? process.env.EMAIL_USER_DEV : process.env.EMAIL_USER_PROD,
-                pass: isDevelopment ? process.env.EMAIL_PASS_DEV : process.env.EMAIL_PASS_PROD
+                user: process.env.EMAIL_USER_PROD || process.env.EMAIL_USER_DEV,
+                pass: process.env.EMAIL_PASS_PROD || process.env.EMAIL_PASS_DEV
             }
         };
 
