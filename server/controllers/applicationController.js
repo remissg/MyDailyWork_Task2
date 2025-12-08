@@ -27,8 +27,10 @@ const applyToJob = async (req, res) => {
             throw new Error('You have already applied to this job');
         }
 
-        // Mock Resume Upload
-        const resumeURL = req.file ? req.file.path : 'https://example.com/resume-placeholder.pdf';
+        // For serverless: store a placeholder when file exists (memory storage)
+        const resumeURL = req.file
+            ? 'in-memory-upload' // adjust to persistent storage (e.g., S3) for real uploads
+            : 'https://example.com/resume-placeholder.pdf';
 
         const application = await Application.create({
             jobId: jobIdParam,

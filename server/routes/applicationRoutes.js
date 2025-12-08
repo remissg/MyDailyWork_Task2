@@ -9,17 +9,8 @@ const {
 const { protect, authorize } = require('../middleware/auth');
 const multer = require('multer');
 
-// Configure multer for basic disk storage
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        // Ensure this directory exists or create it
-        cb(null, 'uploads/')
-    },
-    filename: function (req, file, cb) {
-        cb(null, file.fieldname + '-' + Date.now() + '-' + file.originalname)
-    }
-})
-const upload = multer({ dest: 'uploads/' }); // Simple temp storage
+// Serverless filesystem is read-only; use in-memory storage for uploads.
+const upload = multer({ storage: multer.memoryStorage() });
 
 const router = express.Router();
 
