@@ -1,7 +1,6 @@
-# 🚀 JobFlow - Modern Job Portal Application
+# 🚀 JobPortal - Modern Job Portal Application
 
-<img width="2880" height="1800" alt="Screenshot 2025-12-08 164223" src="https://github.com/user-attachments/assets/c8f25394-c53e-4dfb-b5de-a2febe16bc3f" />
-
+<img width="400" alt="JobFlow logo" src="public/logo.png" />
 
 **JobFlow** is a full-stack MERN (MongoDB, Express, React, Node.js) application designed to connect top talent with great companies. It features a modern, responsive UI, role-based authentication, and comprehensive dashboards for both candidates and employers.
 

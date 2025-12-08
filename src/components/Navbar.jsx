@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Briefcase, Menu, X, User, LogOut } from 'lucide-react';
+import { Menu, X, LogOut } from 'lucide-react';
 import Button from './Button';
 import { useAuth } from '../context/AuthContext';
 
@@ -22,7 +22,12 @@ const Navbar = () => {
                 {/* Logo */}
                 <Link to="/" className="flex items-center gap-2.5 text-xl font-bold text-gray-900 group">
                     <div className="w-10 h-10 bg-[#10b981] rounded-xl flex items-center justify-center text-white shadow-lg shadow-green-500/20 group-hover:scale-105 transition-transform">
-                        <Briefcase size={22} />
+                        <img
+                            src="/logo.png"
+                            alt="JobPortal logo"
+                            className="w-7 h-7 object-contain invert brightness-0"
+                            loading="lazy"
+                        />
                     </div>
                     <span>JobPortal</span>
                 </Link>
