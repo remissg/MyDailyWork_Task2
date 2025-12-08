@@ -26,46 +26,51 @@ import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
 import NotFound from './pages/NotFound'
 
+import { SpeedInsights } from "@vercel/speed-insights/react"
+
 function App() {
   return (
-    <Routes>
-      {/* Public Routes */}
-      <Route path="/" element={<Layout />}>
-        <Route index element={<Home />} />
-        <Route path="jobs" element={<JobListings />} />
-        <Route path="jobs/:id" element={<JobDetail />} />
-        <Route path="companies" element={<Companies />} />
-        <Route path="*" element={<NotFound />} />
-      </Route>
+    <>
+      <SpeedInsights />
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Home />} />
+          <Route path="jobs" element={<JobListings />} />
+          <Route path="jobs/:id" element={<JobDetail />} />
+          <Route path="companies" element={<Companies />} />
+          <Route path="*" element={<NotFound />} />
+        </Route>
 
-      {/* Auth Routes */}
-      <Route path="/login" element={<Layout><Login /></Layout>} />
-      <Route path="/register" element={<Layout><Register /></Layout>} />
-      <Route path="/forgot-password" element={<Layout><ForgotPassword /></Layout>} />
-      <Route path="/reset-password/:resetToken" element={<Layout><ResetPassword /></Layout>} />
-      <Route path="/jobs/:id/apply" element={<JobApplication />} />
+        {/* Auth Routes */}
+        <Route path="/login" element={<Layout><Login /></Layout>} />
+        <Route path="/register" element={<Layout><Register /></Layout>} />
+        <Route path="/forgot-password" element={<Layout><ForgotPassword /></Layout>} />
+        <Route path="/reset-password/:resetToken" element={<Layout><ResetPassword /></Layout>} />
+        <Route path="/jobs/:id/apply" element={<JobApplication />} />
 
-      {/* Candidate Dashboard Routes */}
-      <Route path="/candidate-dashboard" element={<CandidateLayout />}>
-        <Route index element={<CandidateDashboard />} />
-        <Route path="applied" element={<AppliedJobs />} />
-        <Route path="saved" element={<SavedJobs />} />
-        <Route path="resume" element={<ResumeUpload />} />
-        <Route path="settings" element={<Settings />} />
-      </Route>
+        {/* Candidate Dashboard Routes */}
+        <Route path="/candidate-dashboard" element={<CandidateLayout />}>
+          <Route index element={<CandidateDashboard />} />
+          <Route path="applied" element={<AppliedJobs />} />
+          <Route path="saved" element={<SavedJobs />} />
+          <Route path="resume" element={<ResumeUpload />} />
+          <Route path="settings" element={<Settings />} />
+        </Route>
 
-      {/* Employer Dashboard Routes */}
-      <Route path="/dashboard" element={<DashboardLayout />}>
-        <Route index element={<Dashboard />} />
-        <Route path="jobs" element={<MyJobs />} />
-        <Route path="jobs/edit/:id" element={<EditJob />} />
-        <Route path="post-job" element={<PostJob />} />
-        <Route path="applications" element={<Applications />} />
-        <Route path="applications/:id" element={<ApplicationDetail />} />
+        {/* Employer Dashboard Routes */}
+        <Route path="/dashboard" element={<DashboardLayout />}>
+          <Route index element={<Dashboard />} />
+          <Route path="jobs" element={<MyJobs />} />
+          <Route path="jobs/edit/:id" element={<EditJob />} />
+          <Route path="post-job" element={<PostJob />} />
+          <Route path="applications" element={<Applications />} />
+          <Route path="applications/:id" element={<ApplicationDetail />} />
 
-        <Route path="settings" element={<Settings />} />
-      </Route>
-    </Routes>
+          <Route path="settings" element={<Settings />} />
+        </Route>
+      </Routes>
+    </>
   )
 }
 
