@@ -19,7 +19,7 @@ const Layout = ({ children }) => {
                                 <div className="w-10 h-10 bg-[#10b981] rounded-xl flex items-center justify-center text-white shadow-lg shadow-green-500/20 group-hover:scale-105 transition-transform">
                                     <Briefcase size={22} />
                                 </div>
-                                <span>JobFlow</span>
+                                <span>JobPortal</span>
                             </Link>
                             <p className="text-gray-500 leading-relaxed mb-6">
                                 The leading platform connecting top talent with innovative companies. Find your dream career or hire the best professionals today.
@@ -71,7 +71,7 @@ const Layout = ({ children }) => {
 
                     <div className="border-t border-gray-100 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
                         <p className="text-gray-400 text-sm font-medium">
-                            &copy; {new Date().getFullYear()} JobFlow Inc. All rights reserved.
+                            &copy; {new Date().getFullYear()} JobPortal Inc. All rights reserved.
                         </p>
                         <div className="flex gap-8 text-sm text-gray-400 font-medium">
                             <a href="#" className="hover:text-gray-800 transition-colors">Privacy</a>

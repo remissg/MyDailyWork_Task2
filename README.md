@@ -1,8 +1,8 @@
 # 🚀 JobPortal - Modern Job Portal Application
 
-<img width="400" alt="JobFlow logo" src="public/logo.png" />
+<img width="400" alt="JobPortal logo" src="public/logo.png" />
 
-**JobFlow** is a full-stack MERN (MongoDB, Express, React, Node.js) application designed to connect top talent with great companies. It features a modern, responsive UI, role-based authentication, and comprehensive dashboards for both candidates and employers.
+**JobPortal** is a full-stack MERN (MongoDB, Express, React, Node.js) application designed to connect top talent with great companies. It features a modern, responsive UI, role-based authentication, and comprehensive dashboards for both candidates and employers.
 
 ## ✨ Key Features
 
@@ -65,7 +65,7 @@ JWT_SECRET=your_jwt_secret_key
 EMAIL_SERVICE=gmail
 EMAIL_USERNAME=your_email@gmail.com
 EMAIL_PASSWORD=your_email_app_password
-EMAIL_FROM=noreply@jobflow.com
+EMAIL_FROM=noreply@jobportal.com
 \`\`\`
 
 Seed the database with test data:
@@ -99,7 +99,7 @@ Visit \`http://localhost:5173\` to view the app.
 
 | Role | Email | Password |
 |------|-------|----------|
-| **Admin** | `admin@jobflow.com` | `password123` |
+| **Admin** | `admin@jobportal.com` | `password123` |
 | **Employer** | `employer@example.com` | `password123` |
 | **Candidate** | `candidate@test.com` | `password123` |
 

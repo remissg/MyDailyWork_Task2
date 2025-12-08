@@ -47,7 +47,7 @@ const users = [
     // Admin User
     {
         name: 'System Admin',
-        email: 'admin@jobflow.com',
+        email: 'admin@jobportal.com',
         password: 'password123',
         role: 'admin'
     }
