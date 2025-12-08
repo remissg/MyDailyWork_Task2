@@ -1,0 +1,2 @@
+Server running in undefined mode on port 5001
+MongoDB Connected: ac-p8ktiuz-shard-00-01.gvarcoa.mongodb.net
