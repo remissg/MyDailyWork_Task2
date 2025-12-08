@@ -24,7 +24,7 @@ const Navbar = () => {
                     <div className="w-10 h-10 bg-[#10b981] rounded-xl flex items-center justify-center text-white shadow-lg shadow-green-500/20 group-hover:scale-105 transition-transform">
                         <Briefcase size={22} />
                     </div>
-                    <span>JobFlow</span>
+                    <span>JobPortal</span>
                 </Link>
 
                 {/* Desktop Nav */}
