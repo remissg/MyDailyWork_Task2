@@ -25,6 +25,7 @@ app.use('/api/dashboard', require('./routes/dashboardRoutes'));
 app.use('/api/save', require('./routes/savedJobRoutes'));
 app.use('/api/companies', require('./routes/companyRoutes'));
 app.use('/api/admin', require('./routes/adminRoutes'));
+app.use('/api/contact', require('./routes/contactRoutes'));
 
 // Serve uploads
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));

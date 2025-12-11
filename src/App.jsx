@@ -25,6 +25,12 @@ import ResumeUpload from './pages/ResumeUpload'
 import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
 import NotFound from './pages/NotFound'
+import HelpCenter from './pages/HelpCenter'
+import ContactUs from './pages/ContactUs'
+import TermsOfService from './pages/TermsOfService'
+import PrivacyPolicy from './pages/PrivacyPolicy'
+import Sitemap from './pages/Sitemap'
+import Pricing from './pages/Pricing'
 
 import { SpeedInsights } from "@vercel/speed-insights/react"
 
@@ -39,6 +45,12 @@ function App() {
           <Route path="jobs" element={<JobListings />} />
           <Route path="jobs/:id" element={<JobDetail />} />
           <Route path="companies" element={<Companies />} />
+          <Route path="help-center" element={<HelpCenter />} />
+          <Route path="contact" element={<ContactUs />} />
+          <Route path="terms" element={<TermsOfService />} />
+          <Route path="privacy" element={<PrivacyPolicy />} />
+          <Route path="sitemap" element={<Sitemap />} />
+          <Route path="pricing" element={<Pricing />} />
           <Route path="*" element={<NotFound />} />
         </Route>
 

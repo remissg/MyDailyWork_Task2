@@ -17,7 +17,12 @@ const Layout = ({ children }) => {
                         <div className="col-span-1">
                             <Link to="/" className="flex items-center gap-2.5 text-xl font-bold text-gray-900 mb-6 group">
                                 <div className="w-10 h-10 bg-[#10b981] rounded-xl flex items-center justify-center text-white shadow-lg shadow-green-500/20 group-hover:scale-105 transition-transform">
-                                    <Briefcase size={22} />
+                                    <img
+                                        src="/logo.png"
+                                        alt="JobPortal logo"
+                                        className="w-7 h-7 object-contain invert brightness-0"
+                                        loading="lazy"
+                                    />
                                 </div>
                                 <span>JobPortal</span>
                             </Link>
@@ -54,17 +59,17 @@ const Layout = ({ children }) => {
                                 <li><Link to="/dashboard/post-job" className="hover:text-[#10b981] transition-colors">Post a Job</Link></li>
                                 <li><Link to="/dashboard" className="hover:text-[#10b981] transition-colors">Dashboard</Link></li>
                                 <li><Link to="/dashboard/applications" className="hover:text-[#10b981] transition-colors">Browse Candidates</Link></li>
-                                <li><a href="#" className="hover:text-[#10b981] transition-colors">Pricing Plans</a></li>
+                                <li><Link to="/pricing" className="hover:text-[#10b981] transition-colors">Pricing Plans</Link></li>
                             </ul>
                         </div>
 
                         <div>
                             <h4 className="font-bold text-gray-900 mb-6 text-lg">Support</h4>
                             <ul className="space-y-4 text-gray-500 font-medium">
-                                <li><a href="#" className="hover:text-[#10b981] transition-colors">Help Center</a></li>
-                                <li><a href="#" className="hover:text-[#10b981] transition-colors">Terms of Service</a></li>
-                                <li><a href="#" className="hover:text-[#10b981] transition-colors">Privacy Policy</a></li>
-                                <li><a href="#" className="hover:text-[#10b981] transition-colors">Contact Us</a></li>
+                                <li><Link to="/help-center" className="hover:text-[#10b981] transition-colors">Help Center</Link></li>
+                                <li><Link to="/terms" className="hover:text-[#10b981] transition-colors">Terms of Service</Link></li>
+                                <li><Link to="/privacy" className="hover:text-[#10b981] transition-colors">Privacy Policy</Link></li>
+                                <li><Link to="/contact" className="hover:text-[#10b981] transition-colors">Contact Us</Link></li>
                             </ul>
                         </div>
                     </div>
@@ -74,9 +79,9 @@ const Layout = ({ children }) => {
                             &copy; {new Date().getFullYear()} JobPortal Inc. All rights reserved.
                         </p>
                         <div className="flex gap-8 text-sm text-gray-400 font-medium">
-                            <a href="#" className="hover:text-gray-800 transition-colors">Privacy</a>
-                            <a href="#" className="hover:text-gray-800 transition-colors">Terms</a>
-                            <a href="#" className="hover:text-gray-800 transition-colors">Sitemap</a>
+                            <Link to="/privacy" className="hover:text-gray-800 transition-colors">Privacy</Link>
+                            <Link to="/terms" className="hover:text-gray-800 transition-colors">Terms</Link>
+                            <Link to="/sitemap" className="hover:text-gray-800 transition-colors">Sitemap</Link>
                         </div>
                     </div>
                 </div>
