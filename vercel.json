@@ -10,11 +10,12 @@
             "dest": "/server/server.js"
         },
         {
-            "handle": "filesystem"
+            "src": "/(.*\\..*)",
+            "dest": "/dist/$1"
         },
         {
             "src": "/(.*)",
-            "dest": "/index.html"
+            "dest": "/dist/index.html"
         }
     ],
     "builds": [
