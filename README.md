@@ -245,20 +245,89 @@ JobPortal/
 
 ### Vercel Deployment
 
-1. Install Vercel CLI:
+#### Prerequisites
+- A Vercel account ([sign up here](https://vercel.com))
+- MongoDB Atlas account (for production database)
+- GitHub repository (optional, for automatic deployments)
+
+#### Step 1: Install Vercel CLI
 ```bash
 npm i -g vercel
 ```
 
-2. Deploy to production:
+#### Step 2: Login to Vercel
 ```bash
-vercel --prod
+vercel login
 ```
 
+#### Step 3: Set Environment Variables
+Before deploying, you need to set environment variables in Vercel:
+
+**Option A: Via Vercel Dashboard**
+1. Go to your project settings on Vercel
+2. Navigate to **Settings** → **Environment Variables**
+3. Add the following variables:
+
+```env
+MONGO_URI=your_mongodb_atlas_connection_string
+JWT_SECRET=your_secure_jwt_secret_key
+NODE_ENV=production
+PORT=5000
+
+# Email Configuration (Production)
+EMAIL_HOST_PROD=your_smtp_host
+EMAIL_PORT_PROD=587
+EMAIL_USER_PROD=your_email@example.com
+EMAIL_PASS_PROD=your_email_app_password
+EMAIL_FROM=noreply@jobportal.com
+EMAIL_FROM_NAME=JobPortal
+```
+
+**Option B: Via Vercel CLI**
+```bash
+vercel env add MONGO_URI
+vercel env add JWT_SECRET
+vercel env add NODE_ENV production
+# ... add other variables
+```
+
+#### Step 4: Deploy to Production
+```bash
+# Deploy to production
+vercel --prod
+
+# Or deploy to preview
+vercel
+```
+
+#### Step 5: Verify Deployment
+After deployment, Vercel will provide you with:
+- **Production URL**: Your live application URL
+- **Preview URLs**: For each commit/PR
+
+#### Alternative: GitHub Integration (Recommended)
+1. Push your code to GitHub
+2. Import your repository in Vercel Dashboard
+3. Vercel will automatically:
+   - Detect the framework (Vite)
+   - Build and deploy on every push
+   - Create preview deployments for PRs
+
+#### Configuration Details
 The `vercel.json` configuration handles:
-- Frontend build (Vite)
-- Backend API routes (`/api/*`)
-- SPA routing for React
+- **Frontend Build**: Automatically builds React app using Vite
+- **Output Directory**: Serves files from `dist/` folder
+- **API Routes**: All `/api/*` requests are routed to `api/index.js` (serverless function)
+- **SPA Routing**: All non-API routes serve `index.html` for React Router
+- **CORS Headers**: Configured for API endpoints
+- **Function Settings**: API functions have 1024MB memory and 30s timeout
+
+#### Important Notes
+- **File Uploads**: Resume uploads use in-memory storage (suitable for serverless)
+- **Database**: Use MongoDB Atlas for production (free tier available)
+- **Environment Variables**: Never commit `.env` files to Git
+- **Build Command**: `npm run build` (configured in `vercel.json`)
+- **Install Command**: `npm install` (default)
 
 ---
 
