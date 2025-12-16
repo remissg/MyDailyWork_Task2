@@ -24,12 +24,12 @@ const DashboardSidebar = ({ className = "hidden md:block" }) => {
     return (
         <div className={`w-64 border-r border-gray-100 h-[calc(100vh-64px)] overflow-y-auto sticky top-16 bg-white ${className}`}>
             <div className="p-4 space-y-1">
-                {user?.role !== 'admin' && (
+                {user?.role === 'employer' && (
                     <SidebarItem
                         icon={LayoutDashboard}
                         label="Dashboard"
-                        to="/admin"
-                        active={isActive('/admin')}
+                        to="/dashboard"
+                        active={isActive('/dashboard')}
                     />
                 )}
                 {user?.role === 'employer' && (
@@ -72,7 +72,7 @@ const DashboardSidebar = ({ className = "hidden md:block" }) => {
                 />
             </div>
 
-            
+
         </div>
     );
 };
