@@ -1,11 +1,8 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
-const fs = require('fs');
-const path = require('path');
-const logFile = path.join(__dirname, '../debug_log.txt');
 
 const log = (msg) => {
-    fs.appendFileSync(logFile, new Date().toISOString() + ': ' + msg + '\n');
+    // console.log(new Date().toISOString() + ': ' + msg); // Uncomment for Vercel logs if needed
 };
 const crypto = require('crypto');
 const sendEmail = require('../utils/sendEmail');
@@ -201,7 +198,9 @@ const forgotPassword = async (req, res) => {
             throw new Error('Email could not be sent');
         }
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        console.error('Forgot Password Error:', error);
+        const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
+        res.status(statusCode).json({ message: error.message });
     }
 };
 

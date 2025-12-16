@@ -35,7 +35,7 @@ const sendEmail = async (options) => {
         // Send email
         const info = await transporter.sendMail(mailOptions);
 
-        console.log('✅ Message sent: %s', info.messageId);
+        console.log(`✅ Message sent: ${info.messageId}`);
         if (isDevelopment) {
             console.log('📬 Check your Mailtrap inbox at https://mailtrap.io');
         }
