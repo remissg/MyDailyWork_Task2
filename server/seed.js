@@ -164,24 +164,8 @@ const seedDB = async () => {
         console.log('Creating users...');
         const createdUsers = [];
         for (const user of users) {
-            const salt = await bcrypt.genSalt(10);
-            const hashedPassword = await bcrypt.hash(user.password, salt);
-            // Bypass pre-save hook by manually setting properties if needed, 
-            // but here we are creating fresh, so User.create is fine if we pass the hashed password
-            // Wait, if we pass hashed password, the pre-save hook will hash it AGAIN if we are not careful?
-            // No, pre-save hook hashes `this.password` if it is modified.
-            // If we pass `password: hashed`, it IS modified.
-            // So we should pass the PLAIN password and let the hook hash it?
-            // OR we disabled the hook in User.js? No.
-            // User.js: if (!this.isModified('password')) next();
-
-            // Providing plain password is the standard way.
-            // But in my manual loop I was hashing it.
-            // If I pass `password: 'password123'`, the hook will hash it.
-            // If I pass `password: '$2a$10$...'`, the hook will hash the HASH.
-            // So I should pass the PLAIN password and let the model handle it.
-            // BUT wait, `User.create` might not run hooks in some contexts?
-            // Let's rely on the model.
+            // The User model's pre-save hook will handle password hashing.
+            // We just need to pass the user object with the plain-text password.
             const newUser = await User.create(user);
             createdUsers.push(newUser);
         }

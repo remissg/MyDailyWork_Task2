@@ -81,6 +81,12 @@ function App() {
 
           <Route path="settings" element={<Settings />} />
         </Route>
+
+        {/* Admin Dashboard Routes */}
+        <Route path="/admin" element={<DashboardLayout />}>
+          <Route index element={<AdminDashboard />} />
+          <Route path="applications/:id" element={<ApplicationDetail />} />
+        </Route>
       </Routes>
     </>
   )

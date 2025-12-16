@@ -94,7 +94,7 @@ export const AuthProvider = ({ children }) => {
             if (data.role === 'employer') {
                 navigate('/dashboard');
             } else if (data.role === 'admin') {
-                navigate('/dashboard'); // or admin dashboard
+                navigate('/admin');
             } else {
                 navigate('/candidate-dashboard');
             }

@@ -5,7 +5,7 @@ import { User, Briefcase, Calendar, FileText, ArrowLeft, Mail } from 'lucide-rea
 
 const ApplicationDetail = () => {
     const { id } = useParams();
-    const { token } = useAuth();
+    const { token, user } = useAuth();
     const [application, setApplication] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -73,10 +73,18 @@ const ApplicationDetail = () => {
         }
     };
 
+    const getBackLink = () => {
+        if (!application?.candidateId) return '/dashboard'; // Safe fallback
+        // If current user is admin, go to admin dashboard
+        // We verify this by checking the URL or auth context. Using URL for simplicity here as role check might need auth context
+        if (window.location.pathname.includes('/admin/')) return '/admin';
+        return '/dashboard/applications';
+    };
+
     return (
         <div className="max-w-4xl mx-auto">
             <div className="mb-6">
-                <Link to="/dashboard/applications" className="flex items-center text-gray-500 hover:text-gray-900 mb-4 transition-colors">
+                <Link to="/admin?tab=applications" state={{ highlightId: id }} className="flex items-center text-gray-500 hover:text-gray-900 mb-4 transition-colors">
                     <ArrowLeft size={18} className="mr-2" /> Back to Applications
                 </Link>
                 <div className="flex justify-between items-start">
@@ -142,29 +150,32 @@ const ApplicationDetail = () => {
 
                 {/* Sidebar */}
                 <div className="space-y-6">
-                    <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-                        <h3 className="text-lg font-bold text-gray-900 mb-4">Actions</h3>
-                        <div className="space-y-3">
-                            <button
-                                onClick={() => handleStatusUpdate('interview')}
-                                className="w-full py-2 bg-[#10b981] text-white rounded-md font-medium hover:bg-[#0e9f6e] transition-colors"
-                            >
-                                Schedule Interview
-                            </button>
-                            <button
-                                onClick={() => handleStatusUpdate('accepted')}
-                                className="w-full py-2 bg-blue-600 text-white rounded-md font-medium hover:bg-blue-700 transition-colors"
-                            >
-                                Accept Application
-                            </button>
-                            <button
-                                onClick={() => handleStatusUpdate('rejected')}
-                                className="w-full py-2 border border-red-200 text-red-600 bg-red-50 rounded-md font-medium hover:bg-red-100 transition-colors"
-                            >
-                                Reject Application
-                            </button>
+                    {/* Show actions only for employer */}
+                    {(user?.role === 'employer') && (
+                        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                            <h3 className="text-lg font-bold text-gray-900 mb-4">Actions</h3>
+                            <div className="space-y-3">
+                                <button
+                                    onClick={() => handleStatusUpdate('interview')}
+                                    className="w-full py-2 bg-[#10b981] text-white rounded-md font-medium hover:bg-[#0e9f6e] transition-colors"
+                                >
+                                    Schedule Interview
+                                </button>
+                                <button
+                                    onClick={() => handleStatusUpdate('accepted')}
+                                    className="w-full py-2 bg-blue-600 text-white rounded-md font-medium hover:bg-blue-700 transition-colors"
+                                >
+                                    Accept Application
+                                </button>
+                                <button
+                                    onClick={() => handleStatusUpdate('rejected')}
+                                    className="w-full py-2 border border-red-200 text-red-600 bg-red-50 rounded-md font-medium hover:bg-red-100 transition-colors"
+                                >
+                                    Reject Application
+                                </button>
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
             </div>
         </div>

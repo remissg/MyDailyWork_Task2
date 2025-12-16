@@ -18,6 +18,6 @@ router.post('/:jobId', protect, authorize('candidate'), upload.single('resume'),
 router.get('/job/:jobId', protect, authorize('employer', 'admin'), getJobApplications);
 router.get('/me', protect, authorize('candidate'), getMyApplications);
 router.get('/:id', protect, getApplicationById);
-router.put('/:id/status', protect, authorize('employer', 'admin'), updateApplicationStatus);
+router.put('/:id/status', protect, authorize('employer'), updateApplicationStatus);
 
 module.exports = router;

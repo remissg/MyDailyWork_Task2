@@ -161,7 +161,7 @@ const updateApplicationStatus = async (req, res) => {
             throw new Error('Job not found');
         }
 
-        if (job.employerId.toString() !== req.user.id && req.user.role !== 'admin') {
+        if (job.employerId.toString() !== req.user.id) {
             res.status(401);
             throw new Error('Not authorized to update this application');
         }

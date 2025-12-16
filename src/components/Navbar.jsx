@@ -13,6 +13,7 @@ const Navbar = () => {
 
     const getDashboardLink = () => {
         if (!user) return '/dashboard';
+        if (user.role === 'admin') return '/admin';
         return user.role === 'employer' ? '/dashboard' : '/candidate-dashboard';
     };
 

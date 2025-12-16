@@ -1,5 +1,12 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
+const fs = require('fs');
+const path = require('path');
+const logFile = path.join(__dirname, '../debug_log.txt');
+
+const log = (msg) => {
+    fs.appendFileSync(logFile, new Date().toISOString() + ': ' + msg + '\n');
+};
 const crypto = require('crypto');
 const sendEmail = require('../utils/sendEmail');
 
@@ -54,11 +61,22 @@ const registerUser = async (req, res) => {
 // @access  Public
 const loginUser = async (req, res) => {
     try {
+        log('Login attempt started');
         const { email, password } = req.body;
+        log('Login request body: ' + JSON.stringify({ email, password: '***' }));
+
+        // Check if email and password are provided
+        if (!email || !password) {
+            log('Missing email or password');
+            res.status(400);
+            throw new Error('Please provide email and password');
+        }
 
         const user = await User.findOne({ email }).select('+password');
+        log('User found: ' + (user ? 'Yes' : 'No'));
 
         if (user && (await user.matchPassword(password))) {
+            log('Password match success');
             res.json({
                 _id: user._id,
                 name: user.name,
@@ -66,11 +84,14 @@ const loginUser = async (req, res) => {
                 role: user.role,
                 token: generateToken(user._id),
             });
+            log('Response sent successfully');
         } else {
+            log('Invalid credentials');
             res.status(401);
             throw new Error('Invalid email or password');
         }
     } catch (error) {
+        log('Login error caught: ' + error.message + '\nStack: ' + error.stack);
         res.status(401).json({ message: error.message });
     }
 };

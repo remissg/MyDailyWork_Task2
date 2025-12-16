@@ -59,8 +59,37 @@ const deleteUser = async (req, res) => {
     }
 };
 
+// @desc    Get all jobs (Admin)
+// @route   GET /api/admin/jobs
+// @access  Private (Admin)
+const getAllJobs = async (req, res) => {
+    try {
+        const jobs = await Job.find().populate('employerId', 'name companyName').sort({ createdAt: -1 });
+        res.status(200).json({ success: true, count: jobs.length, data: jobs });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// @desc    Get all applications (Admin)
+// @route   GET /api/admin/applications
+// @access  Private (Admin)
+const getAllApplications = async (req, res) => {
+    try {
+        const applications = await Application.find()
+            .populate('jobId', 'title company')
+            .populate('candidateId', 'name email')
+            .sort({ createdAt: -1 });
+        res.status(200).json({ success: true, count: applications.length, data: applications });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
 module.exports = {
     getSystemStats,
     getAllUsers,
-    deleteUser
+    deleteUser,
+    getAllJobs,
+    getAllApplications
 };

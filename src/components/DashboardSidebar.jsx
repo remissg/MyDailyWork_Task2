@@ -24,30 +24,36 @@ const DashboardSidebar = ({ className = "hidden md:block" }) => {
     return (
         <div className={`w-64 border-r border-gray-100 h-[calc(100vh-64px)] overflow-y-auto sticky top-16 bg-white ${className}`}>
             <div className="p-4 space-y-1">
-                <SidebarItem
-                    icon={LayoutDashboard}
-                    label="Dashboard"
-                    to="/dashboard"
-                    active={isActive('/dashboard')}
-                />
-                <SidebarItem
-                    icon={Briefcase}
-                    label="Post a Job"
-                    to="/dashboard/post-job"
-                    active={isActive('/dashboard/post-job')}
-                />
-                <SidebarItem
-                    icon={Briefcase}
-                    label="My Jobs"
-                    to="/dashboard/jobs"
-                    active={isActive('/dashboard/jobs')}
-                />
-                <SidebarItem
-                    icon={FileText}
-                    label="Applications Received"
-                    to="/dashboard/applications"
-                    active={isActive('/dashboard/applications')}
-                />
+                {user?.role !== 'admin' && (
+                    <SidebarItem
+                        icon={LayoutDashboard}
+                        label="Dashboard"
+                        to="/dashboard"
+                        active={isActive('/dashboard')}
+                    />
+                )}
+                {user?.role === 'employer' && (
+                    <>
+                        <SidebarItem
+                            icon={Briefcase}
+                            label="Post a Job"
+                            to="/dashboard/post-job"
+                            active={isActive('/dashboard/post-job')}
+                        />
+                        <SidebarItem
+                            icon={Briefcase}
+                            label="My Jobs"
+                            to="/dashboard/jobs"
+                            active={isActive('/dashboard/jobs')}
+                        />
+                        <SidebarItem
+                            icon={FileText}
+                            label="Applications Received"
+                            to="/dashboard/applications"
+                            active={isActive('/dashboard/applications')}
+                        />
+                    </>
+                )}
 
                 {user?.role === 'admin' && (
                     <SidebarItem

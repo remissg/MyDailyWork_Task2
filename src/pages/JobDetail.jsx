@@ -110,10 +110,16 @@ const JobDetail = () => {
         );
     }
 
+    const getBackLink = () => {
+        // If current user is admin, go to admin dashboard
+        if (user?.role === 'admin') return '/admin';
+        return '/jobs';
+    };
+
     return (
         <div className="container py-10 max-w-5xl">
-            <Link to="/jobs" className="inline-flex items-center gap-2 text-gray-500 hover:text-gray-900 mb-8 text-sm font-semibold transition-colors">
-                <ArrowLeft size={18} /> Back to Jobs
+            <Link to="/admin?tab=jobs" state={{ highlightId: id }} className="inline-flex items-center gap-2 text-gray-500 hover:text-gray-900 mb-8 text-sm font-semibold transition-colors">
+                <ArrowLeft size={18} /> Back to {user?.role === 'admin' ? 'Admin Dashboard' : 'Jobs'}
             </Link>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -150,22 +156,24 @@ const JobDetail = () => {
                             </div>
                         </div>
 
-                        <div className="flex gap-4">
-                            <Button
-                                onClick={handleApply}
-                                className="flex-1 text-lg py-3 shadow-lg shadow-primary/20"
-                            >
-                                Apply Now
-                            </Button>
-                            <Button
-                                variant="outline"
-                                className="px-6 border-2 font-semibold hover:border-gray-300"
-                                onClick={handleSaveJob}
-                                disabled={loading}
-                            >
-                                {saved ? 'Saved' : 'Save Job'}
-                            </Button>
-                        </div>
+                        {(!user || user.role === 'candidate') && (
+                            <div className="flex gap-4">
+                                <Button
+                                    onClick={handleApply}
+                                    className="flex-1 text-lg py-3 shadow-lg shadow-primary/20"
+                                >
+                                    Apply Now
+                                </Button>
+                                <Button
+                                    variant="outline"
+                                    className="px-6 border-2 font-semibold hover:border-gray-300"
+                                    onClick={handleSaveJob}
+                                    disabled={loading}
+                                >
+                                    {saved ? 'Saved' : 'Save Job'}
+                                </Button>
+                            </div>
+                        )}
                     </div>
 
                     {/* Job Overview */}
