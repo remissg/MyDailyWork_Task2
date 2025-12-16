@@ -107,7 +107,7 @@ const getApplicationById = async (req, res) => {
     try {
         const application = await Application.findById(req.params.id)
             .populate('jobId', 'title company location jobType')
-            .populate('candidateId', 'name email');
+            .populate('candidateId', 'name email phone location bio skills experience education');
 
         if (!application) {
             res.status(404);

@@ -65,10 +65,10 @@ const DashboardSidebar = ({ className = "hidden md:block" }) => {
                 )}
 
                 <SidebarItem
-                    icon={Settings}
-                    label="Profile Settings"
-                    to="/dashboard/settings"
-                    active={isActive('/dashboard/settings')}
+                    icon={User}
+                    label="Profile"
+                    to="/profile"
+                    active={isActive('/profile')}
                 />
             </div>
 

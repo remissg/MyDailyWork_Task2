@@ -32,6 +32,29 @@ const userSchema = mongoose.Schema(
             type: String,
             required: function () { return this.role === 'employer'; }
         },
+        foundedDate: Date,
+        // Candidate Profile Fields
+        bio: String,
+        location: String,
+        phone: String,
+        skills: [String],
+        experience: [{
+            title: String,
+            company: String,
+            location: String,
+            startDate: Date,
+            endDate: Date,
+            current: Boolean,
+            description: String
+        }],
+        education: [{
+            degree: String,
+            school: String,
+            field: String,
+            startDate: Date,
+            endDate: Date,
+            current: Boolean
+        }],
         resetPasswordToken: String,
         resetPasswordExpire: Date,
         createdAt: {

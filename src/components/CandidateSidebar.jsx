@@ -1,5 +1,5 @@
 import React from 'react';
-import { LayoutDashboard, Briefcase, Bookmark, FileText, Settings, LogOut, Upload } from 'lucide-react';
+import { LayoutDashboard, Briefcase, Bookmark, FileText, User, LogOut, Upload } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
@@ -49,10 +49,10 @@ const CandidateSidebar = ({ className = "hidden md:block" }) => {
                     active={isActive('/candidate-dashboard/resume')}
                 />
                 <SidebarItem
-                    icon={Settings}
-                    label="Settings"
-                    to="/candidate-dashboard/settings"
-                    active={isActive('/candidate-dashboard/settings')}
+                    icon={User}
+                    label="Profile"
+                    to="/profile"
+                    active={isActive('/profile')}
                 />
             </div>
 

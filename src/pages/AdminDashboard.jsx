@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { Users, Briefcase, FileText, CheckCircle, Trash2, Eye } from 'lucide-react';
+import { Users, Briefcase, FileText, CheckCircle, Trash2, Eye, Bell, User } from 'lucide-react';
 import StatCard from '../components/StatCard';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
+import NotificationCenter from '../components/NotificationCenter';
 
 const AdminDashboard = () => {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -104,7 +105,20 @@ const AdminDashboard = () => {
 
     return (
         <div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-6">Admin Dashboard</h1>
+            {/* Header */}
+            <div className="flex items-center justify-between mb-6">
+                <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
+                <div className="flex items-center gap-3">
+                    <NotificationCenter />
+                    <Link
+                        to="/profile"
+                        className="inline-flex items-center gap-2 px-4 py-2.5 bg-gray-100 text-gray-700 rounded-lg font-semibold hover:bg-gray-200 transition-colors"
+                    >
+                        <User size={18} />
+                        Profile
+                    </Link>
+                </div>
+            </div>
 
             {/* Stats */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">

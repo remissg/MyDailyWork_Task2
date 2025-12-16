@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { User, Briefcase, Calendar, FileText, ArrowLeft, Mail } from 'lucide-react';
+import { User, Briefcase, Calendar, FileText, ArrowLeft, Mail, Phone, MapPin, Award, GraduationCap } from 'lucide-react';
 
 const ApplicationDetail = () => {
     const { id } = useParams();
@@ -146,6 +146,96 @@ const ApplicationDetail = () => {
                             </div>
                         )}
                     </div>
+
+                    {/* Candidate Profile - Only show to employers */}
+                    {user?.role === 'employer' && application.candidateId && (
+                        <>
+                            {/* Contact & Bio */}
+                            <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                                <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                                    <User size={20} className="text-[#10b981]" /> Candidate Profile
+                                </h3>
+                                <div className="space-y-3">
+                                    {application.candidateId.phone && (
+                                        <div className="flex items-center gap-2 text-gray-700">
+                                            <Phone size={16} className="text-gray-400" />
+                                            <span>{application.candidateId.phone}</span>
+                                        </div>
+                                    )}
+                                    {application.candidateId.location && (
+                                        <div className="flex items-center gap-2 text-gray-700">
+                                            <MapPin size={16} className="text-gray-400" />
+                                            <span>{application.candidateId.location}</span>
+                                        </div>
+                                    )}
+                                    {application.candidateId.bio && (
+                                        <div className="mt-3">
+                                            <span className="block text-sm font-semibold text-gray-900 mb-1">About</span>
+                                            <p className="text-gray-700 text-sm leading-relaxed">{application.candidateId.bio}</p>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* Skills */}
+                            {application.candidateId.skills && application.candidateId.skills.length > 0 && (
+                                <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                                    <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                                        <Award size={20} className="text-[#10b981]" /> Skills
+                                    </h3>
+                                    <div className="flex flex-wrap gap-2">
+                                        {application.candidateId.skills.map((skill, index) => (
+                                            <span key={index} className="px-3 py-1.5 bg-green-100 text-green-700 rounded-full text-sm font-medium">
+                                                {skill}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Experience */}
+                            {application.candidateId.experience && application.candidateId.experience.length > 0 && (
+                                <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                                    <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                                        <Briefcase size={20} className="text-[#10b981]" /> Work Experience
+                                    </h3>
+                                    <div className="space-y-4">
+                                        {application.candidateId.experience.map((exp, index) => (
+                                            <div key={index} className="border-l-2 border-green-500 pl-4">
+                                                <h4 className="font-semibold text-gray-900">{exp.title}</h4>
+                                                <p className="text-sm text-gray-600">{exp.company} • {exp.location}</p>
+                                                <p className="text-xs text-gray-500 mt-1">
+                                                    {exp.startDate && new Date(exp.startDate).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })} - {exp.current ? 'Present' : exp.endDate && new Date(exp.endDate).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+                                                </p>
+                                                {exp.description && <p className="text-sm text-gray-700 mt-2">{exp.description}</p>}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Education */}
+                            {application.candidateId.education && application.candidateId.education.length > 0 && (
+                                <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                                    <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                                        <GraduationCap size={20} className="text-[#10b981]" /> Education
+                                    </h3>
+                                    <div className="space-y-4">
+                                        {application.candidateId.education.map((edu, index) => (
+                                            <div key={index} className="border-l-2 border-green-500 pl-4">
+                                                <h4 className="font-semibold text-gray-900">{edu.degree}</h4>
+                                                <p className="text-sm text-gray-600">{edu.school}</p>
+                                                {edu.field && <p className="text-sm text-gray-600">Field: {edu.field}</p>}
+                                                <p className="text-xs text-gray-500 mt-1">
+                                                    {edu.startDate && new Date(edu.startDate).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })} - {edu.current ? 'Present' : edu.endDate && new Date(edu.endDate).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+                                                </p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </>
+                    )}
                 </div>
 
                 {/* Sidebar */}

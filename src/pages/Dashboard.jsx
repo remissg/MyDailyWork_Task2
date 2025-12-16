@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Briefcase, Users, FileText, TrendingUp, Plus, Eye, Settings } from 'lucide-react';
+import { Briefcase, Users, FileText, TrendingUp, Plus, Eye, Settings, Calendar, ArrowRight, Bell, User } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 import StatCard from '../components/StatCard';
 import StatusCard from '../components/StatusCard';
-
-
+import NotificationCenter from '../components/NotificationCenter';
 
 const Dashboard = () => {
-    const { token } = useAuth();
+    const { token, user } = useAuth();
     const [stats, setStats] = useState({
         totalJobs: 0,
         activeJobs: 0,
@@ -24,10 +23,16 @@ const Dashboard = () => {
     });
     const [loading, setLoading] = useState(true);
 
+    const getGreeting = () => {
+        const hour = new Date().getHours();
+        if (hour < 12) return 'Good Morning';
+        if (hour < 18) return 'Good Afternoon';
+        return 'Good Evening';
+    };
+
     useEffect(() => {
         const fetchDashboardData = async () => {
             try {
-                // Fetch Stats
                 const statsRes = await fetch('/api/dashboard/employer', {
                     headers: { Authorization: `Bearer ${token}` }
                 });
@@ -36,7 +41,6 @@ const Dashboard = () => {
                     setStats(statsData.data);
                 }
 
-                // Fetch Recent Applications
                 const appsRes = await fetch('/api/dashboard/employer/applications', {
                     headers: { Authorization: `Bearer ${token}` }
                 });
@@ -44,7 +48,6 @@ const Dashboard = () => {
                 if (appsData.success) {
                     setApplications(appsData.data.slice(0, 5));
 
-                    // Calculate status breakdown
                     const breakdown = appsData.data.reduce((acc, app) => {
                         acc[app.status] = (acc[app.status] || 0) + 1;
                         return acc;
@@ -52,7 +55,6 @@ const Dashboard = () => {
                     setStatusBreakdown(breakdown);
                 }
 
-                // Fetch Recent Jobs
                 const jobsRes = await fetch('/api/dashboard/employer/jobs', {
                     headers: { Authorization: `Bearer ${token}` }
                 });
@@ -71,19 +73,37 @@ const Dashboard = () => {
         }
     }, [token]);
 
-    if (loading) return <div>Loading dashboard...</div>;
+    if (loading) return (
+        <div className="flex justify-center items-center min-h-[50vh]">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-600"></div>
+        </div>
+    );
 
     return (
-        <div>
-            <div className="flex items-center justify-between mb-8">
-                <h1 className="text-2xl font-bold text-gray-900">Dashboard Overview</h1>
-                <Link
-                    to="/dashboard/post-job"
-                    className="flex items-center gap-2 px-4 py-2 bg-[#10b981] text-white rounded-md font-medium hover:bg-[#0e9f6e] transition-colors"
-                >
-                    <Plus size={20} />
-                    Post New Job
-                </Link>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            {/* Header */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+                <div>
+                    <h1 className="text-3xl font-bold text-gray-900">{getGreeting()}, {user?.companyName || user?.name}!</h1>
+                    <p className="text-gray-500 mt-1">Here's what's happening with your job postings today</p>
+                </div>
+                <div className="flex items-center gap-3">
+                    <NotificationCenter />
+                    <Link
+                        to="/profile"
+                        className="inline-flex items-center gap-2 px-4 py-2.5 bg-gray-100 text-gray-700 rounded-lg font-semibold hover:bg-gray-200 transition-colors"
+                    >
+                        <User size={18} />
+                        Profile
+                    </Link>
+                    <Link
+                        to="/dashboard/post-job"
+                        className="inline-flex items-center gap-2 px-6 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                    >
+                        <Plus size={20} />
+                        Post New Job
+                    </Link>
+                </div>
             </div>
 
             {/* Stats Grid */}
@@ -104,150 +124,169 @@ const Dashboard = () => {
                     label="Active Jobs"
                     value={stats.activeJobs}
                     icon={TrendingUp}
-                    color="bg-[#10b981]"
+                    color="bg-green-600"
                 />
             </div>
 
-            {/* Application Status Breakdown */}
-            <div className="mb-8">
-                <h2 className="text-lg font-bold text-gray-900 mb-4">Application Status</h2>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <StatusCard
-                        label="Pending Review"
-                        value={statusBreakdown.pending}
-                        color="text-yellow-600"
-                        bgColor="bg-yellow-500"
-                    />
-                    <StatusCard
-                        label="Interview Scheduled"
-                        value={statusBreakdown.interview}
-                        color="text-blue-600"
-                        bgColor="bg-blue-500"
-                    />
-                    <StatusCard
-                        label="Accepted"
-                        value={statusBreakdown.accepted}
-                        color="text-green-600"
-                        bgColor="bg-green-500"
-                    />
-                    <StatusCard
-                        label="Rejected"
-                        value={statusBreakdown.rejected}
-                        color="text-red-600"
-                        bgColor="bg-red-500"
-                    />
-                </div>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Recent Applications */}
-                <div className="bg-white rounded-lg border border-gray-100 overflow-hidden">
-                    <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
-                        <h3 className="font-bold text-gray-900">Recent Applications</h3>
-                        <Link
-                            to="/dashboard/applications"
-                            className="text-sm text-[#10b981] font-medium hover:underline"
-                        >
-                            View All
-                        </Link>
+            {/* Main Content Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                {/* Left Column - Applications */}
+                <div className="lg:col-span-2 space-y-8">
+                    {/* Application Status */}
+                    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+                        <h2 className="text-lg font-bold text-gray-900 mb-4">Application Status</h2>
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                            <StatusCard
+                                label="Pending"
+                                value={statusBreakdown.pending}
+                                color="text-yellow-600"
+                                bgColor="bg-yellow-500"
+                            />
+                            <StatusCard
+                                label="Interview"
+                                value={statusBreakdown.interview}
+                                color="text-blue-600"
+                                bgColor="bg-blue-500"
+                            />
+                            <StatusCard
+                                label="Accepted"
+                                value={statusBreakdown.accepted}
+                                color="text-green-600"
+                                bgColor="bg-green-500"
+                            />
+                            <StatusCard
+                                label="Rejected"
+                                value={statusBreakdown.rejected}
+                                color="text-red-600"
+                                bgColor="bg-red-500"
+                            />
+                        </div>
                     </div>
-                    <div className="divide-y divide-gray-100">
-                        {applications.map((app) => (
-                            <Link
-                                key={app._id}
-                                to={`/dashboard/applications/${app._id}`}
-                                className="px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors block"
-                            >
-                                <div className="flex items-center gap-4">
-                                    <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold">
-                                        {app.candidateId?.name?.charAt(0) || 'U'}
-                                    </div>
-                                    <div>
-                                        <h4 className="font-medium text-gray-900">{app.candidateId?.name || 'Unknown Candidate'}</h4>
-                                        <p className="text-sm text-gray-500">{app.jobId?.title}</p>
-                                    </div>
-                                </div>
-                                <span className="text-sm text-gray-500">{new Date(app.createdAt).toLocaleDateString()}</span>
+
+                    {/* Recent Applications */}
+                    <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                        <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+                            <h3 className="font-bold text-gray-900 text-lg">Recent Applications</h3>
+                            <Link to="/dashboard/applications" className="text-sm font-medium text-green-600 hover:text-green-700 transition-colors flex items-center gap-1">
+                                View All <ArrowRight size={14} />
                             </Link>
-                        ))}
-                        {applications.length === 0 && <p className="px-6 py-4 text-gray-500">No recent applications.</p>}
+                        </div>
+                        <div className="divide-y divide-gray-50">
+                            {applications.length === 0 ? (
+                                <div className="p-8 text-center text-gray-500">
+                                    <FileText className="mx-auto h-12 w-12 text-gray-300 mb-4" />
+                                    <h3 className="text-lg font-medium text-gray-900 mb-1">No applications yet</h3>
+                                    <p className="text-gray-400 text-sm">Applications will appear here when candidates apply to your jobs.</p>
+                                </div>
+                            ) : (
+                                applications.map((app) => (
+                                    <Link
+                                        key={app._id}
+                                        to={`/dashboard/applications/${app._id}`}
+                                        className="px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors group"
+                                    >
+                                        <div className="flex items-center gap-4">
+                                            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-sm group-hover:shadow-md transition-all">
+                                                {app.candidateId?.name?.charAt(0) || 'U'}
+                                            </div>
+                                            <div>
+                                                <h4 className="font-semibold text-gray-900 group-hover:text-green-600 transition-colors">{app.candidateId?.name || 'Unknown Candidate'}</h4>
+                                                <p className="text-sm text-gray-500">{app.jobId?.title}</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-3">
+                                            <span className="text-xs text-gray-400">{new Date(app.createdAt).toLocaleDateString()}</span>
+                                            <ArrowRight size={16} className="text-gray-400 group-hover:text-green-600 transition-colors" />
+                                        </div>
+                                    </Link>
+                                ))
+                            )}
+                        </div>
                     </div>
                 </div>
 
-                {/* Recent Jobs Posted */}
-                <div className="bg-white rounded-lg border border-gray-100 overflow-hidden">
-                    <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
-                        <h3 className="font-bold text-gray-900">Recent Jobs Posted</h3>
-                        <Link
-                            to="/dashboard/my-jobs"
-                            className="text-sm text-[#10b981] font-medium hover:underline"
-                        >
-                            View All
-                        </Link>
-                    </div>
-                    <div className="divide-y divide-gray-100">
-                        {recentJobs.map((job) => (
-                            <Link
-                                key={job._id}
-                                to={`/dashboard/edit-job/${job._id}`}
-                                className="px-6 py-4 hover:bg-gray-50 transition-colors block"
-                            >
-                                <div className="flex items-center justify-between mb-2">
-                                    <h4 className="font-medium text-gray-900">{job.title}</h4>
-                                    <span className={`text-xs px-2 py-1 rounded-full ${job.isActive ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'}`}>
-                                        {job.isActive ? 'Active' : 'Inactive'}
-                                    </span>
+                {/* Right Column - Jobs & Actions */}
+                <div className="space-y-8">
+                    {/* Recent Jobs */}
+                    <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                        <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
+                            <h3 className="font-bold text-gray-900 text-lg flex items-center gap-2">
+                                <Briefcase size={20} className="text-green-600" />
+                                Recent Jobs
+                            </h3>
+                            <Link to="/dashboard/jobs" className="text-sm font-medium text-green-600 hover:text-green-700 transition-colors">View All</Link>
+                        </div>
+                        <div className="p-4 space-y-3">
+                            {recentJobs.length === 0 ? (
+                                <div className="text-center py-6 text-gray-500">
+                                    <p className="text-sm">No jobs posted yet</p>
                                 </div>
-                                <div className="flex items-center gap-4 text-sm text-gray-500">
-                                    <span>{job.location}</span>
-                                    <span>•</span>
-                                    <span>{job.jobType}</span>
+                            ) : (
+                                recentJobs.map((job) => (
+                                    <Link
+                                        key={job._id}
+                                        to={`/dashboard/jobs/edit/${job._id}`}
+                                        className="block p-4 rounded-lg border border-gray-200 hover:border-green-300 hover:shadow-md transition-all group bg-white"
+                                    >
+                                        <div className="flex items-start justify-between mb-2">
+                                            <h4 className="font-semibold text-gray-900 line-clamp-1 group-hover:text-green-600 transition-colors">{job.title}</h4>
+                                            <span className={`text-xs px-2 py-0.5 rounded-full border ${job.isActive ? 'bg-green-50 text-green-700 border-green-100' : 'bg-gray-100 text-gray-600 border-gray-200'}`}>
+                                                {job.isActive ? 'Active' : 'Inactive'}
+                                            </span>
+                                        </div>
+                                        <div className="flex items-center gap-2 text-xs text-gray-500">
+                                            <span className="bg-gray-100 px-2 py-1 rounded">{job.location}</span>
+                                            <span className="bg-gray-100 px-2 py-1 rounded">{job.type}</span>
+                                        </div>
+                                    </Link>
+                                ))
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Quick Actions */}
+                    <div className="bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl shadow-lg p-6 text-white">
+                        <h3 className="font-bold text-lg mb-4">Quick Actions</h3>
+                        <div className="space-y-3">
+                            <Link
+                                to="/dashboard/post-job"
+                                className="flex items-center gap-3 p-3 bg-white/20 backdrop-blur-sm rounded-lg hover:bg-white/30 transition-all group"
+                            >
+                                <div className="w-10 h-10 bg-white/30 rounded-lg flex items-center justify-center">
+                                    <Plus size={20} />
+                                </div>
+                                <div className="flex-1">
+                                    <p className="font-semibold">Post Job</p>
+                                    <p className="text-xs text-green-50">Create new listing</p>
                                 </div>
                             </Link>
-                        ))}
-                        {recentJobs.length === 0 && <p className="px-6 py-4 text-gray-500">No jobs posted yet.</p>}
+                            <Link
+                                to="/dashboard/applications"
+                                className="flex items-center gap-3 p-3 bg-white/20 backdrop-blur-sm rounded-lg hover:bg-white/30 transition-all group"
+                            >
+                                <div className="w-10 h-10 bg-white/30 rounded-lg flex items-center justify-center">
+                                    <Eye size={20} />
+                                </div>
+                                <div className="flex-1">
+                                    <p className="font-semibold">Applications</p>
+                                    <p className="text-xs text-green-50">Review candidates</p>
+                                </div>
+                            </Link>
+                            <Link
+                                to="/dashboard/jobs"
+                                className="flex items-center gap-3 p-3 bg-white/20 backdrop-blur-sm rounded-lg hover:bg-white/30 transition-all group"
+                            >
+                                <div className="w-10 h-10 bg-white/30 rounded-lg flex items-center justify-center">
+                                    <Settings size={20} />
+                                </div>
+                                <div className="flex-1">
+                                    <p className="font-semibold">Manage Jobs</p>
+                                    <p className="text-xs text-green-50">Edit or delete</p>
+                                </div>
+                            </Link>
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            {/* Quick Actions */}
-            <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-                <Link
-                    to="/dashboard/post-job"
-                    className="flex items-center gap-3 p-4 bg-white border border-gray-200 rounded-lg hover:border-[#10b981] hover:shadow-sm transition-all group"
-                >
-                    <div className="p-2 bg-green-50 rounded-lg group-hover:bg-green-100 transition-colors">
-                        <Plus size={20} className="text-[#10b981]" />
-                    </div>
-                    <div>
-                        <h4 className="font-medium text-gray-900">Post New Job</h4>
-                        <p className="text-sm text-gray-500">Create a new job listing</p>
-                    </div>
-                </Link>
-                <Link
-                    to="/dashboard/applications"
-                    className="flex items-center gap-3 p-4 bg-white border border-gray-200 rounded-lg hover:border-[#10b981] hover:shadow-sm transition-all group"
-                >
-                    <div className="p-2 bg-blue-50 rounded-lg group-hover:bg-blue-100 transition-colors">
-                        <Eye size={20} className="text-blue-600" />
-                    </div>
-                    <div>
-                        <h4 className="font-medium text-gray-900">View Applications</h4>
-                        <p className="text-sm text-gray-500">Review all applications</p>
-                    </div>
-                </Link>
-                <Link
-                    to="/dashboard/my-jobs"
-                    className="flex items-center gap-3 p-4 bg-white border border-gray-200 rounded-lg hover:border-[#10b981] hover:shadow-sm transition-all group"
-                >
-                    <div className="p-2 bg-purple-50 rounded-lg group-hover:bg-purple-100 transition-colors">
-                        <Settings size={20} className="text-purple-600" />
-                    </div>
-                    <div>
-                        <h4 className="font-medium text-gray-900">Manage Jobs</h4>
-                        <p className="text-sm text-gray-500">Edit or delete jobs</p>
-                    </div>
-                </Link>
             </div>
         </div>
     );

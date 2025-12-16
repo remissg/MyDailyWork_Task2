@@ -112,17 +112,34 @@ const updateUserProfile = async (req, res) => {
         const user = await User.findById(req.user.id);
 
         if (user) {
+            // Basic fields
             user.name = req.body.name || user.name;
             user.email = req.body.email || user.email;
 
-            if (req.body.companyName && user.role === 'employer') {
-                user.companyName = req.body.companyName;
+            // Contact & Bio
+            if (req.body.phone !== undefined) user.phone = req.body.phone;
+            if (req.body.location !== undefined) user.location = req.body.location;
+            if (req.body.bio !== undefined) user.bio = req.body.bio;
+
+            // Employer-specific fields
+            if (user.role === 'employer') {
+                if (req.body.companyName) user.companyName = req.body.companyName;
+                if (req.body.foundedDate !== undefined) user.foundedDate = req.body.foundedDate;
             }
 
+            // Candidate-specific fields
+            if (user.role === 'candidate') {
+                if (req.body.skills !== undefined) user.skills = req.body.skills;
+                if (req.body.experience !== undefined) user.experience = req.body.experience;
+                if (req.body.education !== undefined) user.education = req.body.education;
+            }
+
+            // Password update
             if (req.body.password) {
                 user.password = req.body.password;
             }
 
+            // Notifications
             if (req.body.notifications) {
                 user.notifications = { ...user.notifications, ...req.body.notifications };
             }
@@ -135,6 +152,14 @@ const updateUserProfile = async (req, res) => {
                 email: updatedUser.email,
                 role: updatedUser.role,
                 companyName: updatedUser.companyName,
+                phone: updatedUser.phone,
+                location: updatedUser.location,
+                bio: updatedUser.bio,
+                foundedDate: updatedUser.foundedDate,
+                skills: updatedUser.skills,
+                experience: updatedUser.experience,
+                education: updatedUser.education,
+                notifications: updatedUser.notifications,
                 token: generateToken(updatedUser._id),
             });
         } else {

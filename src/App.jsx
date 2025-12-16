@@ -24,6 +24,7 @@ import SavedJobs from './pages/SavedJobs'
 import ResumeUpload from './pages/ResumeUpload'
 import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
+import Profile from './pages/Profile'
 import NotFound from './pages/NotFound'
 import HelpCenter from './pages/HelpCenter'
 import ContactUs from './pages/ContactUs'
@@ -67,8 +68,10 @@ function App() {
           <Route path="applied" element={<AppliedJobs />} />
           <Route path="saved" element={<SavedJobs />} />
           <Route path="resume" element={<ResumeUpload />} />
-          <Route path="settings" element={<Settings />} />
         </Route>
+
+        {/* Profile Route */}
+        <Route path="/profile" element={<Layout><Profile /></Layout>} />
 
         {/* Employer Dashboard Routes */}
         <Route path="/dashboard" element={<DashboardLayout />}>
@@ -78,8 +81,6 @@ function App() {
           <Route path="post-job" element={<PostJob />} />
           <Route path="applications" element={<Applications />} />
           <Route path="applications/:id" element={<ApplicationDetail />} />
-
-          <Route path="settings" element={<Settings />} />
         </Route>
 
         {/* Admin Dashboard Routes */}
