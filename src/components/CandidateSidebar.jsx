@@ -55,16 +55,6 @@ const CandidateSidebar = ({ className = "hidden md:block" }) => {
                     active={isActive('/profile')}
                 />
             </div>
-
-            <div className="p-4 border-t border-gray-100 mt-auto">
-                <button
-                    onClick={logout}
-                    className="flex items-center gap-3 px-4 py-3 w-full rounded-md text-sm font-medium text-red-600 hover:bg-red-50 transition-colors"
-                >
-                    <LogOut size={20} />
-                    Sign Out
-                </button>
-            </div>
         </div>
     );
 };

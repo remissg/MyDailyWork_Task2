@@ -21,7 +21,23 @@ export const AuthProvider = ({ children }) => {
                             Authorization: `Bearer ${token}`
                         }
                     });
-                    const data = await res.json();
+
+                    // Check if response is ok and has content
+                    if (!res.ok) {
+                        console.error('Auth check failed with status:', res.status);
+                        logout();
+                        return;
+                    }
+
+                    // Check if response has content before parsing
+                    const text = await res.text();
+                    if (!text) {
+                        console.error('Empty response from server');
+                        logout();
+                        return;
+                    }
+
+                    const data = JSON.parse(text);
 
                     if (data.success) {
                         setUser(data.data);
@@ -49,7 +65,8 @@ export const AuthProvider = ({ children }) => {
                 body: JSON.stringify(userData)
             });
 
-            const data = await res.json();
+            const text = await res.text();
+            const data = text ? JSON.parse(text) : {};
 
             if (!res.ok) {
                 throw new Error(data.message || 'Registration failed');
@@ -81,7 +98,8 @@ export const AuthProvider = ({ children }) => {
                 body: JSON.stringify({ email, password })
             });
 
-            const data = await res.json();
+            const text = await res.text();
+            const data = text ? JSON.parse(text) : {};
 
             if (!res.ok) {
                 throw new Error(data.message || 'Login failed');

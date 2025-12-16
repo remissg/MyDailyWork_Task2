@@ -2,8 +2,23 @@ import React from 'react';
 import Navbar from './Navbar';
 import { Outlet, Link } from 'react-router-dom';
 import { Briefcase, Twitter, Linkedin, Facebook, Instagram } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 const Layout = ({ children }) => {
+    const { user } = useAuth();
+
+    // Hide candidate section from employers and admins
+    const showCandidateSection = !user || user.role === 'candidate';
+    // Hide employer section from candidates and admins
+    const showEmployerSection = !user || user.role === 'employer';
+
+    // Calculate grid columns based on visible sections
+    const getGridCols = () => {
+        if (showCandidateSection && showEmployerSection) return 'md:grid-cols-4';
+        if (!showCandidateSection && !showEmployerSection) return 'md:grid-cols-2';
+        return 'md:grid-cols-3';
+    };
+
     return (
         <div className="min-h-screen bg-white flex flex-col font-sans">
             <Navbar />
@@ -12,7 +27,7 @@ const Layout = ({ children }) => {
             </main>
             <footer className="bg-white border-t border-gray-100 pt-16 pb-8">
                 <div className="container mx-auto px-4">
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                    <div className={`grid grid-cols-1 ${getGridCols()} gap-12 mb-12`}>
                         {/* Brand */}
                         <div className="col-span-1">
                             <Link to="/" className="flex items-center gap-2.5 text-xl font-bold text-gray-900 mb-6 group">
@@ -43,25 +58,29 @@ const Layout = ({ children }) => {
                         </div>
 
                         {/* Links */}
-                        <div>
-                            <h4 className="font-bold text-gray-900 mb-6 text-lg">For Candidates</h4>
-                            <ul className="space-y-4 text-gray-500 font-medium">
-                                <li><Link to="/jobs" className="hover:text-[#10b981] transition-colors">Browse Jobs</Link></li>
-                                <li><Link to="/companies" className="hover:text-[#10b981] transition-colors">Browse Companies</Link></li>
-                                <li><Link to="/candidate-dashboard" className="hover:text-[#10b981] transition-colors">Dashboard</Link></li>
-                                <li><Link to="/candidate-dashboard/saved" className="hover:text-[#10b981] transition-colors">Saved Jobs</Link></li>
-                            </ul>
-                        </div>
+                        {showCandidateSection && (
+                            <div>
+                                <h4 className="font-bold text-gray-900 mb-6 text-lg">For Candidates</h4>
+                                <ul className="space-y-4 text-gray-500 font-medium">
+                                    <li><Link to="/jobs" className="hover:text-[#10b981] transition-colors">Browse Jobs</Link></li>
+                                    <li><Link to="/companies" className="hover:text-[#10b981] transition-colors">Browse Companies</Link></li>
+                                    <li><Link to="/candidate-dashboard" className="hover:text-[#10b981] transition-colors">Dashboard</Link></li>
+                                    <li><Link to="/candidate-dashboard/saved" className="hover:text-[#10b981] transition-colors">Saved Jobs</Link></li>
+                                </ul>
+                            </div>
+                        )}
 
-                        <div>
-                            <h4 className="font-bold text-gray-900 mb-6 text-lg">For Employers</h4>
-                            <ul className="space-y-4 text-gray-500 font-medium">
-                                <li><Link to="/dashboard/post-job" className="hover:text-[#10b981] transition-colors">Post a Job</Link></li>
-                                <li><Link to="/dashboard" className="hover:text-[#10b981] transition-colors">Dashboard</Link></li>
-                                <li><Link to="/dashboard/applications" className="hover:text-[#10b981] transition-colors">Browse Candidates</Link></li>
-                                <li><Link to="/pricing" className="hover:text-[#10b981] transition-colors">Pricing Plans</Link></li>
-                            </ul>
-                        </div>
+                        {showEmployerSection && (
+                            <div>
+                                <h4 className="font-bold text-gray-900 mb-6 text-lg">For Employers</h4>
+                                <ul className="space-y-4 text-gray-500 font-medium">
+                                    <li><Link to="/dashboard/post-job" className="hover:text-[#10b981] transition-colors">Post a Job</Link></li>
+                                    <li><Link to="/dashboard" className="hover:text-[#10b981] transition-colors">Dashboard</Link></li>
+                                    <li><Link to="/dashboard/applications" className="hover:text-[#10b981] transition-colors">Browse Candidates</Link></li>
+                                    <li><Link to="/pricing" className="hover:text-[#10b981] transition-colors">Pricing Plans</Link></li>
+                                </ul>
+                            </div>
+                        )}
 
                         <div>
                             <h4 className="font-bold text-gray-900 mb-6 text-lg">Support</h4>
